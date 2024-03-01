@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(const LessonSchedule());
@@ -22,7 +24,7 @@ class LessonSchedule extends StatelessWidget {
         brightness: Brightness.dark,
         /* dark theme settings */
       ),
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.system,
       /* ThemeMode.system to follow system theme,
          ThemeMode.light for light theme,
          ThemeMode.dark for dark theme
@@ -141,6 +143,12 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
     with TickerProviderStateMixin {
   late final TabController _tabController;
 
+  String getCurrentDateForHeader(){
+    DateTime dateTime = DateTime.now();
+    String currentTime = DateTime(dateTime.year, dateTime.month, dateTime.day).toString();
+    return currentTime;
+  }
+  
   @override
   void initState() {
     super.initState();
@@ -157,7 +165,7 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('M653A3'),
+        title: Text(getCurrentDateForHeader()),
         bottom: TabBar(
           controller: _tabController,
           tabs: const <Widget>[
@@ -166,12 +174,8 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
               text: 'Bu gün',
             ),
             Tab(
-              icon: Icon(Icons.calendar_view_week),
-              text: 'Bu həftə',
-            ),
-            Tab(
               icon: Icon(Icons.calendar_month),
-              text: 'Ümumi',
+              text: 'Bu həftə',
             ),
           ],
         ),
@@ -179,16 +183,130 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
       body: TabBarView(
         controller: _tabController,
         children: const <Widget>[
-          Center(
-            child: Text("It's cloudy here"),
+          Column(
+            children: <Widget>[
+              Expanded(child: LessonBox('18:30', 'Əməliyyat sistemlərinin arxitekturası', 613, 6, Colors.red, 'Ramal')),
+              Expanded(child: LessonBox('20:00', 'NoSQL verilənlər bazalarının idarəetmə sistemləri', 401, 1, Colors.green, 'Ramal'))
+            ],
           ),
-          Center(
-            child: Text("It's rainy here"),
-          ),
-          Center(
-            child: Text("It's sunny here"),
+          Column(
+            children: [
+              Text("It's rainy here")
+            ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+
+class LessonBox extends StatelessWidget {
+  const LessonBox(this.lessonTime, this.lessonName, this.roomNo, this.corpusNo, this.accentColor, this.teacherFullName, {super.key});
+
+  final String lessonTime;
+  final String lessonName;
+  final int roomNo;
+  final int corpusNo;
+  final Color accentColor;
+  final String teacherFullName;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      splashColor: accentColor.withAlpha(30),
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context){
+              return SizedBox(
+                height: 128,
+                child: Center(
+                  child: ElevatedButton(
+                    child: const Text('close'),
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              );
+            });
+      },
+      child: Expanded(
+        child: Row(
+          children: [
+            RotatedBox(
+                quarterTurns: 3,
+                child: Container(
+                  height: 80,
+                  width: double.infinity,
+                  color: accentColor.withAlpha(30),
+                  child: Center(
+                    child: Text(
+                      lessonTime,
+                      style: TextStyle(
+                        fontSize: 28,
+                      ),
+                    ),
+                  ),
+                )
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  LessonName(lessonName),
+                  LessonTeacher(teacherFullName)
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class LessonTeacher extends StatelessWidget {
+  const LessonTeacher(this.teacherFullName, {super.key});
+
+  final String teacherFullName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 32, right: 32, bottom: 32),
+      child: Expanded(
+        child: Text(
+          teacherFullName,
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontSize: 14
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class LessonName extends StatelessWidget {
+  const LessonName(this.lessonName, {super.key});
+
+  final String lessonName;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(32),
+      child: Expanded(
+        child: Text(
+          lessonName,
+          style: TextStyle(
+              fontSize: 18,
+          ),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
