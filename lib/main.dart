@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 
 void main() {
@@ -15,14 +16,14 @@ class LessonSchedule extends StatelessWidget {
     return MaterialApp(
       title: 'Lesson Schedule',
       theme: ThemeData(
-        brightness: Brightness.light,
         /* light theme settings */
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.light),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark),
         /* dark theme settings */
+        useMaterial3: true,
       ),
       themeMode: ThemeMode.system,
       /* ThemeMode.system to follow system theme,
@@ -35,15 +36,45 @@ class LessonSchedule extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int currentPageIndex = 0;
+  NavigationDestinationLabelBehavior labelBehavior =
+      NavigationDestinationLabelBehavior.alwaysShow;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SchedulerAppBar(),
-      body: HomeTabBar(),
-      bottomNavigationBar: NavigationExample(),
+        appBar: SchedulerAppBar(),
+        body: <Widget>[
+          HomeTabBar(),
+          Subjects()
+        ][currentPageIndex],
+        bottomNavigationBar: NavigationBar(
+            labelBehavior: labelBehavior,
+            selectedIndex: currentPageIndex,
+            onDestinationSelected: (int index) {
+              setState(() {
+                currentPageIndex = index;
+              });
+            },
+            destinations: const <Widget>[
+              NavigationDestination(
+                icon: Icon(Icons.calendar_view_month),
+                label: 'Cədvəl',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.subject),
+                label: 'Fənnlər',
+              ),
+            ]
+        )
+
     );
   }
 }
@@ -93,43 +124,6 @@ class SchedulerAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class NavigationExample extends StatefulWidget {
-  const NavigationExample({super.key});
-
-  @override
-  State<NavigationExample> createState() => _NavigationExampleState();
-}
-class _NavigationExampleState extends State<NavigationExample> {
-  int currentPageIndex = 0;
-  NavigationDestinationLabelBehavior labelBehavior =
-      NavigationDestinationLabelBehavior.alwaysShow;
-
-  @override
-  Widget build(BuildContext context) {
-    return NavigationBar(
-      labelBehavior: labelBehavior,
-      selectedIndex: currentPageIndex,
-      onDestinationSelected: (int index) {
-        setState(() {
-          currentPageIndex = index;
-        });
-      },
-      destinations: const <Widget>[
-        NavigationDestination(
-          icon: Icon(Icons.calendar_view_month),
-          label: 'Cədvəl',
-        ),
-        NavigationDestination(
-          icon: Icon(Icons.subject),
-          label: 'Fənnlər',
-        ),
-      ],
-    );
-  }
-}
-
-
-
 class HomeTabBar extends StatefulWidget {
   const HomeTabBar({super.key});
 
@@ -142,12 +136,6 @@ class HomeTabBar extends StatefulWidget {
 class _HomeTabBarExampleState extends State<HomeTabBar>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-
-  String getCurrentDateForHeader(){
-    DateTime dateTime = DateTime.now();
-    String currentTime = DateTime(dateTime.year, dateTime.month, dateTime.day).toString();
-    return currentTime;
-  }
   
   @override
   void initState() {
@@ -164,21 +152,30 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(getCurrentDateForHeader()),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const <Widget>[
-            Tab(
-              icon: Icon(Icons.schedule),
-              text: 'Bu gün',
-            ),
-            Tab(
-              icon: Icon(Icons.calendar_month),
-              text: 'Bu həftə',
-            ),
-          ],
-        ),
+      appBar: PreferredSize(
+
+        preferredSize: Size.fromHeight(kToolbarHeight + 25),
+        child: ColoredBox(
+          child: TabBar(
+
+            dividerHeight: 0,
+            dividerColor: Colors.transparent,
+            controller: _tabController,
+            tabs: const <Widget>[
+              Tab(
+                iconMargin: EdgeInsets.only(top:5, bottom: 5),
+                icon: Icon(Icons.schedule),
+                text: 'Bu gün',
+              ),
+              Tab(
+                iconMargin: EdgeInsets.only(top:5, bottom: 5),
+                icon: Icon(Icons.calendar_month),
+                text: 'Bu həftə',
+              ),
+            ],
+          ),
+          color: Colors.red.withAlpha(25),
+        )
       ),
       body: TabBarView(
         controller: _tabController,
@@ -200,6 +197,16 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
   }
 }
 
+class Subjects extends StatelessWidget {
+  const Subjects({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Fənnlər'),
+    );
+  }
+}
 
 
 class LessonBox extends StatelessWidget {
@@ -214,55 +221,101 @@ class LessonBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      splashColor: accentColor.withAlpha(30),
-      onTap: () {
-        showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context){
-              return SizedBox(
-                height: 128,
-                child: Center(
-                  child: ElevatedButton(
-                    child: const Text('close'),
-                    onPressed: (){
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              );
-            });
-      },
-      child: Expanded(
-        child: Row(
-          children: [
-            RotatedBox(
-                quarterTurns: 3,
-                child: Container(
-                  height: 80,
-                  width: double.infinity,
-                  color: accentColor.withAlpha(30),
+    return Container(
+      margin: EdgeInsets.all(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        splashColor: accentColor,
+        onTap: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context){
+                return SizedBox(
+                  height: 128,
                   child: Center(
-                    child: Text(
-                      lessonTime,
-                      style: TextStyle(
-                        fontSize: 28,
+                    child: ElevatedButton(
+                      child: const Text('close'),
+                      onPressed: (){
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                );
+              });
+        },
+        child: Expanded(
+          child: Row(
+            children: [
+              RotatedBox(
+              quarterTurns: 3,
+              child: Stack(
+                children: [
+                  Container(
+                    height: 80,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: accentColor,
+                    ),
+                    child: Center(
+                      child: Text(
+                        lessonTime,
+                        style: TextStyle(
+                          fontSize: 28,
+                        ),
                       ),
                     ),
                   ),
-                )
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  LessonName(lessonName),
-                  LessonTeacher(teacherFullName)
+                  Positioned(
+                    child: Opacity(
+                      opacity: 0.04,
+                      child: Icon(
+                        Icons.schedule,
+                        size: 256,
+                      ),
+                    ),
+                    left: 10,
+                    top: -110,
+                  )
                 ],
-              ),
-            )
-          ],
+              )
+          ),
+              Expanded(
+                child: Column(
+                  children: [
+                    LessonName(lessonName),
+                    LessonTeacher(teacherFullName),
+                    LessonRoom(roomNo)
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class LessonRoom extends StatelessWidget {
+  const LessonRoom(this.lessonRoom, {super.key});
+
+  final int lessonRoom;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.door_sliding),
+        ColoredBox(
+            color: Colors.redAccent,
+          child: Padding(
+            padding: EdgeInsets.all(8),
+
+            child: Text(lessonRoom.toString()),
+          ),
+        )
+      ],
     );
   }
 }
@@ -276,19 +329,16 @@ class LessonTeacher extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 32, right: 32, bottom: 32),
-      child: Expanded(
-        child: Text(
-          teacherFullName,
-          textAlign: TextAlign.left,
-          style: TextStyle(
+      child: Text(
+        teacherFullName,
+        textAlign: TextAlign.left,
+        style: TextStyle(
             fontSize: 14
-          ),
         ),
       ),
     );
   }
 }
-
 
 class LessonName extends StatelessWidget {
   const LessonName(this.lessonName, {super.key});
@@ -299,14 +349,12 @@ class LessonName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(32),
-      child: Expanded(
-        child: Text(
-          lessonName,
-          style: TextStyle(
-              fontSize: 18,
-          ),
-          textAlign: TextAlign.center,
+      child: Text(
+        lessonName,
+        style: TextStyle(
+          fontSize: 18,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }
