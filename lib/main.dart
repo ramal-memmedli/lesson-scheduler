@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(const LessonSchedule());
@@ -50,10 +47,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: SchedulerAppBar(),
+        appBar: const SchedulerAppBar(),
         body: <Widget>[
-          HomeTabBar(),
-          Subjects()
+          const HomeTabBar(),
+          const Subjects()
         ][currentPageIndex],
         bottomNavigationBar: NavigationBar(
             labelBehavior: labelBehavior,
@@ -154,8 +151,9 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
     return Scaffold(
       appBar: PreferredSize(
 
-        preferredSize: Size.fromHeight(kToolbarHeight + 25),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 25),
         child: ColoredBox(
+          color: Colors.red.withAlpha(25),
           child: TabBar(
 
             dividerHeight: 0,
@@ -174,7 +172,6 @@ class _HomeTabBarExampleState extends State<HomeTabBar>
               ),
             ],
           ),
-          color: Colors.red.withAlpha(25),
         )
       ),
       body: TabBarView(
@@ -222,10 +219,10 @@ class LessonBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(12),
+      margin: const EdgeInsets.all(12),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        splashColor: accentColor,
+        splashColor: accentColor.withAlpha(25),
         onTap: () {
           showModalBottomSheet(
               context: context,
@@ -243,54 +240,52 @@ class LessonBox extends StatelessWidget {
                 );
               });
         },
-        child: Expanded(
-          child: Row(
-            children: [
-              RotatedBox(
-              quarterTurns: 3,
-              child: Stack(
-                children: [
-                  Container(
-                    height: 80,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: accentColor,
-                    ),
-                    child: Center(
-                      child: Text(
-                        lessonTime,
-                        style: TextStyle(
-                          fontSize: 28,
+        child: Row(
+          children: [
+            RotatedBox(
+                quarterTurns: 3,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 80,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: accentColor.withAlpha(25),
+                      ),
+                      child: Center(
+                        child: Text(
+                          lessonTime,
+                          style: const TextStyle(
+                            fontSize: 28,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    child: Opacity(
-                      opacity: 0.04,
-                      child: Icon(
-                        Icons.schedule,
-                        size: 256,
+                    const Positioned(
+                      left: 10,
+                      top: -110,
+                      child: Opacity(
+                        opacity: 0.04,
+                        child: Icon(
+                          Icons.schedule,
+                          size: 256,
+                        ),
                       ),
-                    ),
-                    left: 10,
-                    top: -110,
-                  )
-                ],
-              )
-          ),
-              Expanded(
-                child: Column(
-                  children: [
-                    LessonName(lessonName),
-                    LessonTeacher(teacherFullName),
-                    LessonRoom(roomNo)
+                    )
                   ],
-                ),
-              )
-            ],
-          ),
+                )
+            ),
+            Flexible(
+              child: Column(
+                children: [
+                  LessonName(lessonName),
+                  LessonTeacher(teacherFullName),
+                  LessonRoom(roomNo)
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
@@ -306,11 +301,11 @@ class LessonRoom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(Icons.door_sliding),
+        const Icon(Icons.door_sliding),
         ColoredBox(
             color: Colors.redAccent,
           child: Padding(
-            padding: EdgeInsets.all(8),
+            padding: const EdgeInsets.all(8),
 
             child: Text(lessonRoom.toString()),
           ),
@@ -328,11 +323,11 @@ class LessonTeacher extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 32, right: 32, bottom: 32),
+      padding: const EdgeInsets.only(left: 32, right: 32, bottom: 32),
       child: Text(
         teacherFullName,
         textAlign: TextAlign.left,
-        style: TextStyle(
+        style: const TextStyle(
             fontSize: 14
         ),
       ),
@@ -348,10 +343,10 @@ class LessonName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(32),
+      padding: const EdgeInsets.all(32),
       child: Text(
         lessonName,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 18,
         ),
         textAlign: TextAlign.center,
