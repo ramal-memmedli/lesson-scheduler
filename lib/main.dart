@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lesson_schedule/domain/entities/lesson.dart';
+import 'package:lesson_schedule/domain/entities/subject.dart';
 import 'package:lesson_schedule/widgets/main_layout.dart';
+
+const List<SubjectEntity> subjects = [];
+const List<LessonEntity> lessons = [];
 
 void main() {
   runApp(const LessonSchedule());
@@ -15,11 +20,11 @@ class LessonSchedule extends StatelessWidget {
       title: 'Lesson Schedule',
       theme: ThemeData(
         /* light theme settings */
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.light),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent, brightness: Brightness.light),
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red, brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigoAccent, brightness: Brightness.dark),
         /* dark theme settings */
         useMaterial3: true,
       ),
@@ -29,7 +34,7 @@ class LessonSchedule extends StatelessWidget {
          ThemeMode.dark for dark theme
       */
       debugShowCheckedModeBanner: false,
-      home: const MainLayout(),
+      home: const MainLayout(lessons, subjects),
     );
   }
 }

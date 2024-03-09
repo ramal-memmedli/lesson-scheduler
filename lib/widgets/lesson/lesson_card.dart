@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 class LessonBox extends StatelessWidget {
   const LessonBox(this.lessonTime, this.lessonName, this.roomNo, this.corpusNo, this.accentColor, this.teacherFullName, {super.key});
@@ -12,95 +13,101 @@ class LessonBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        splashColor: accentColor.withAlpha(25),
-        onTap: () {
-          showModalBottomSheet(
-              context: context,
-              builder: (BuildContext context){
-                return SizedBox(
-                  height: 128,
-                  child: Center(
-                    child: ElevatedButton(
-                      child: const Text('close'),
-                      onPressed: (){
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                );
-              });
-        },
-        child: Row(
-          children: [
-            RotatedBox(
-                quarterTurns: 3,
-                child: Stack(
-                  children: [
-                    Container(
-                      height: 80,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: accentColor.withAlpha(25),
-                      ),
+    return
+      Container(
+          decoration: BoxDecoration(
+              color: Colors.redAccent.withAlpha(20),
+          ),
+          child: InkWell(
+            splashColor: accentColor.withAlpha(25),
+            onTap: () {
+              showModalBottomSheet(
+                  enableDrag: true,
+                  showDragHandle: true,
+                  barrierColor: Colors.black.withAlpha(10),
+                  context: context,
+                  builder: (BuildContext context){
+                    return SizedBox(
+                      height: 128,
                       child: Center(
-                        child: Text(
-                          lessonTime,
-                          style: const TextStyle(
-                            fontSize: 28,
+                        child: ElevatedButton(
+                          child: const Text('close'),
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
+                  });
+            },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RotatedBox(
+                    quarterTurns: 3,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: accentColor.withAlpha(25),
+                          ),
+                          child: Center(
+                            child: Text(
+                              lessonTime,
+                              style: const TextStyle(
+                                fontSize: 28,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const Positioned(
-                      left: -15,
-                      top: -110,
-                      child: Opacity(
-                        opacity: 0.04,
-                        child: Icon(
-                          Icons.schedule,
-                          size: 256,
-                        ),
-                      ),
+                        const Positioned(
+                          left: -15,
+                          top: -110,
+                          child: Opacity(
+                            opacity: 0.04,
+                            child: Icon(
+                              Icons.schedule,
+                              size: 256,
+                            ),
+                          ),
+                        )
+                      ],
                     )
-                  ],
-                )
-            ),
-            Flexible(
-              child: Container(
-                padding: EdgeInsets.all(12),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          LessonName(lessonName),
-                          LessonTeacher(teacherFullName),
-                        ],
-                      ),
-                    ),
-                    Flexible(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          LessonRoom(roomNo),
-                          LessonCorpus(corpusNo)
-                        ],
-                      ),
-                    )
-                  ],
                 ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+                Flexible(
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              LessonName(lessonName),
+                              LessonTeacher(teacherFullName),
+                            ],
+                          ),
+                        ),
+                        Flexible(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              LessonRoom(roomNo),
+                              LessonCorpus(corpusNo)
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
+      );
   }
 }
 
@@ -188,7 +195,7 @@ class LessonName extends StatelessWidget {
     return Text(
       lessonName,
       style: const TextStyle(
-        fontSize: 22,
+        fontSize: 18,
       ),
     );
   }

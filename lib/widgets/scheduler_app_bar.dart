@@ -20,14 +20,6 @@ class _SchedulerAppBarState extends State<SchedulerAppBar> {
       title: Text(widget.title),
       actions: <Widget>[
         IconButton(
-          icon: const Icon(Icons.add_alert),
-          tooltip: 'Show Snackbar',
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('This is a snackbar')));
-          },
-        ),
-        IconButton(
           icon: const Icon(Icons.settings),
           tooltip: 'Settings',
           onPressed: () {

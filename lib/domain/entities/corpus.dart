@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class CorpusEntity extends Equatable{
   final int ? id;
-  final int ? corpusNo;
+  final int corpusNo;
 
   const CorpusEntity(
       this.id,
